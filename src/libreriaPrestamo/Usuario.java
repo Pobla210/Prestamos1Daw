@@ -5,9 +5,9 @@ import java.time.LocalDate;
 public class Usuario {
     private String nombre;
     private String email;
-    private String emailvalido="^[A-Za-z0-9]+@[A-Za-z0-9]+\\.(com|es)$";
+    private static final String emailvalido="^[A-Za-z0-9]+@[A-Za-z0-9]+\\.(com|es)$";
     private String numeroSocio;
-    private String numeroSociovalido= "^SOC\\d{5}$";
+    private static final String numeroSociovalido= "^SOC\\d{5}$";
     private LocalDate fechaRegistro;
     private boolean sancionado;
     private LocalDate fechaFinSancion=null;
@@ -30,15 +30,27 @@ public class Usuario {
     }
 
     public void sancionar(int diasancion,LocalDate sancioninicio) throws UsuarioSancionadoException{
+        if(sancionado){
+            throw new UsuarioSancionadoException("Error. El usuario ya se encuentra sancionado");
+        }
         this.fechaFinSancion=sancioninicio.plusDays(diasancion);
     }
 
-    public void levantarSancion(){
+    public void levantarSancion()throws UsuarioSancionadoException{
         if (sancionado==true){
-            fechaFinSancion=LocalDate.now();
-        }
-        else if (sancionado==false){
             fechaFinSancion=null;
+            sancionado=false;
         }
+        else {
+            throw new UsuarioSancionadoException("Error.El usuario no se encuentra sancionado actualmente.");
+        }
+    }
+
+    public boolean estaSancionado(){
+        return sancionado;
+    }
+
+    public String ToString(){
+        return "Nombre: "+nombre+"\nemail: "+email+"\nNumero Socio: "+numeroSocio+"\nFecha Registro: "+fechaRegistro+"\nFecha Fin Sancion: "+fechaFinSancion;
     }
 }
