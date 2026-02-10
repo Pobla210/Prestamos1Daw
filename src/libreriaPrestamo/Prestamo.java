@@ -1,6 +1,8 @@
 package libreriaPrestamo;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 public class Prestamo {
     private String codigoLibro;
@@ -46,10 +48,49 @@ public class Prestamo {
 
     }
 
-    public void registrarDevolucion(LocalDate devolucion){
+    public void registrarDevolucion(LocalDate devolucion)throws PrestamoInvalidoException{
         if (devolucion==null){
-
+            throw new PrestamoInvalidoException("Error. La fecha de devolucion no puede ser nula");
         }
+        else if (devolucion.isBefore(fechaPrestamo)) {
+            throw new PrestamoInvalidoException("Error. La fecha no puede ser anterior a la fehca de prestamo.");
+        }
+        else {
+            this.fechaDevolucionReal=devolucion;
+        }
+    }
 
+    public int calcularDiasRetraso()throws PrestamoInvalidoException{
+        int diasRetraso;
+        if (fechaDevolucionReal==null){
+            return (int)ChronoUnit.DAYS.between(fechaPrestamo,LocalDate.now());
+        }
+        diasRetraso=(int)ChronoUnit.DAYS.between(fechaDevolucionPrevista,fechaDevolucionReal);
+        if (diasRetraso<=0){
+            return 0;
+        }
+        else {
+            return diasRetraso;
+        }
+    }
+
+    public boolean estaRetrasado(){
+        if (fechaDevolucionPrevista.isBefore(LocalDate.now())){
+            return false;
+        }
+        else if (fechaDevolucionPrevista.isEqual(LocalDate.now())){
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    @Override
+    public String toString() {
+        DateTimeFormatter patron = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return "Codigo Libro: "+this.codigoLibro+"\nTitulo libro: "+this.tituloLibro+"\nNombre socio: "+this.socio.getNombre()+
+                "\nFecha del prestamo: "+fechaPrestamo.format(patron)+"\nFecha de devolucion prevista: "+fechaDevolucionPrevista.format(patron)+
+                "\nFecha de devolucion real: "+fechaDevolucionReal.format(patron);
     }
 }

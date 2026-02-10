@@ -3,6 +3,7 @@ package libreriaPrestamo;
 import java.time.LocalDate;
 
 public class Usuario {
+
     private String nombre;
     private String email;
     private static final String emailvalido="^[A-Za-z0-9]+@[A-Za-z0-9]+\\.(com|es)$";
@@ -29,6 +30,10 @@ public class Usuario {
         this.fechaRegistro=fechaRegistro;
     }
 
+    public String getNombre() {
+        return nombre;
+    }
+
     public void sancionar(int diasancion,LocalDate sancioninicio) throws UsuarioSancionadoException{
         if(sancionado){
             throw new UsuarioSancionadoException("Error. El usuario ya se encuentra sancionado");
@@ -50,7 +55,7 @@ public class Usuario {
         return sancionado;
     }
 
-    public String ToString(){
+    public String toString(){
         return "Nombre: "+nombre+"\nemail: "+email+"\nNumero Socio: "+numeroSocio+"\nFecha Registro: "+fechaRegistro+"\nFecha Fin Sancion: "+fechaFinSancion;
     }
 }
