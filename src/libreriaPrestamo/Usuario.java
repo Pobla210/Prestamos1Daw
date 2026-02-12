@@ -13,6 +13,15 @@ public class Usuario {
     private boolean sancionado;
     private LocalDate fechaFinSancion=null;
 
+    public String getNombre() {
+
+        return nombre;
+    }
+
+    public String getNumeroSocio() {
+        return numeroSocio;
+    }
+
     public Usuario(String nombre,String email,String numeroSocio,LocalDate fechaRegistro) throws UsuarioInvalidoExcepcion{
         this.nombre=nombre;
         if (email.matches(emailvalido)){
@@ -30,14 +39,11 @@ public class Usuario {
         this.fechaRegistro=fechaRegistro;
     }
 
-    public String getNombre() {
-        return nombre;
-    }
-
     public void sancionar(int diasancion,LocalDate sancioninicio) throws UsuarioSancionadoException{
         if(sancionado){
             throw new UsuarioSancionadoException("Error. El usuario ya se encuentra sancionado");
         }
+        this.sancionado=true;
         this.fechaFinSancion=sancioninicio.plusDays(diasancion);
     }
 

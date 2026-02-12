@@ -25,6 +25,9 @@ public class Prestamo {
         return fechaDevolucionReal;
     }
 
+    public Usuario getSocio() {
+        return socio;
+    }
 
     public Prestamo(String codigoLibro,Usuario socio,String tituloLibro,LocalDate fechaPrestamo)throws PrestamoInvalidoException{
         if (!codigoLibro.matches(codigoLibroCorrecto)){

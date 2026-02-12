@@ -51,13 +51,36 @@ public class GestionarBiblioteca {
         throw new PrestamoInvalidoException("No se pueden prestar mas libros.");
     }
 
-    public boolean devolverLibro(String codlibro,LocalDate devolucion)throws PrestamoInvalidoException{
+    public boolean devolverLibro(String codlibro,LocalDate devolucion)throws PrestamoInvalidoException,UsuarioSancionadoException{
+        boolean devuelto=false;
         for (int i=0;i<prestamos.length;i++){
-            if (prestamos[i].getCodigoLibro().equalsIgnoreCase(codlibro) && devolucion.isBefore(prestamos[i].getFechaPrestamo())){
+            if (prestamos[i]!=null && prestamos[i].getCodigoLibro().equalsIgnoreCase(codlibro) && devolucion.isBefore(prestamos[i].getFechaPrestamo())){
                 throw new PrestamoInvalidoException("Error. La fecha de devolucion no puede ser anterior a la fecha del prestamo.");
                 }
+            if (prestamos[i].getCodigoLibro().equalsIgnoreCase(codlibro)){
+                if (prestamos[i].estaRetrasado()){
+                    prestamos[i].registrarDevolucion(LocalDate.now());
+                    prestamos[i].getSocio().sancionar(prestamos[i].calcularDiasRetraso(),LocalDate.now());
+                    devuelto=true;
+                    break;
+                }
             }
-             if ()
+            else {
+                prestamos[i].registrarDevolucion(LocalDate.now());
+                devuelto=true;
+                break;
+            }
+            }
+            return devuelto;
+    }
+
+    public Usuario buscarUsuario(String codigoSocio){
+        for (int i=0;i<usuarios.length;i++){
+            if (usuarios[i]!=null && usuarios[i].getNumeroSocio().equalsIgnoreCase(codigoSocio)){
+                return usuarios[i];
+            }
+        }
+        return null;
     }
 
     public Prestamo[] getPrestamos() {
@@ -68,4 +91,22 @@ public class GestionarBiblioteca {
         return usuarios;
     }
 
+    public String toString(){
+        String resultado=" ";
+        resultado+="--Usuarios--";
+        for (int i=0;i<usuarios.length;i++){
+            if (usuarios[i]!=null){
+                resultado+=usuarios[i].toString()+"\n";
+            }
+        }
+
+        resultado+="--Prestamos--";
+        for (int i=0;i<prestamos.length;i++){
+            if (prestamos[i]!=null){
+                resultado+=prestamos[i].toString()+"\n";
+            }
+        }
+
+        return resultado;
+    }
 }
