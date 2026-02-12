@@ -13,6 +13,19 @@ public class Prestamo {
     private LocalDate fechaDevolucionPrevista;
     private LocalDate fechaDevolucionReal=null;
 
+    public String getCodigoLibro() {
+        return codigoLibro;
+    }
+
+    public LocalDate getFechaPrestamo() {
+        return fechaPrestamo;
+    }
+
+    public LocalDate getFechaDevolucionReal() {
+        return fechaDevolucionReal;
+    }
+
+
     public Prestamo(String codigoLibro,Usuario socio,String tituloLibro,LocalDate fechaPrestamo)throws PrestamoInvalidoException{
         if (!codigoLibro.matches(codigoLibroCorrecto)){
             throw new PrestamoInvalidoException("Error. El codigo del libro introducido no es correcto, prueba de nuevo");
@@ -53,7 +66,7 @@ public class Prestamo {
             throw new PrestamoInvalidoException("Error. La fecha de devolucion no puede ser nula");
         }
         else if (devolucion.isBefore(fechaPrestamo)) {
-            throw new PrestamoInvalidoException("Error. La fecha no puede ser anterior a la fehca de prestamo.");
+            throw new PrestamoInvalidoException("Error. La fecha no puede ser anterior a la fecha de prestamo.");
         }
         else {
             this.fechaDevolucionReal=devolucion;

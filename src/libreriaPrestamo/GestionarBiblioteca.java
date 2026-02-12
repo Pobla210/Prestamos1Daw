@@ -30,7 +30,42 @@ public class GestionarBiblioteca {
         }
     }
 
-    public void realizarPrestamo(String codlibro, String titulolibro, LocalDate fechaprestamo, Usuario socio){
+    public void realizarPrestamo(String codlibro, String titulolibro, LocalDate fechaprestamo, Usuario socio) throws PrestamoInvalidoException,UsuarioSancionadoException,LibroNoDisponibleException{
+        if (socio.estaSancionado()){
+            throw new UsuarioSancionadoException("El usuario esta sancionado.");
+        }
+        for (int i = 0; i < prestamos.length; i++) {
+            if (prestamos[i] != null) {
+                if (prestamos[i].getCodigoLibro().equalsIgnoreCase(codlibro) && prestamos[i].getFechaDevolucionReal()==null) {
+                    throw new LibroNoDisponibleException("El libro ya está prestado.");
+                }
+            }
+        }
 
+        for (int i=0;i<prestamos.length;i++){
+            if (prestamos[i]==null){
+                prestamos[i]=new Prestamo(codlibro,socio,titulolibro,fechaprestamo);
+            }
+        }
+
+        throw new PrestamoInvalidoException("No se pueden prestar mas libros.");
     }
+
+    public boolean devolverLibro(String codlibro,LocalDate devolucion)throws PrestamoInvalidoException{
+        for (int i=0;i<prestamos.length;i++){
+            if (prestamos[i].getCodigoLibro().equalsIgnoreCase(codlibro) && devolucion.isBefore(prestamos[i].getFechaPrestamo())){
+                throw new PrestamoInvalidoException("Error. La fecha de devolucion no puede ser anterior a la fecha del prestamo.");
+                }
+            }
+             if ()
+    }
+
+    public Prestamo[] getPrestamos() {
+        return prestamos;
+    }
+
+    public Usuario[] getUsuarios() {
+        return usuarios;
+    }
+
 }
