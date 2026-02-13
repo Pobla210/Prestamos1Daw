@@ -59,20 +59,16 @@ public class GestionarBiblioteca {
     public boolean devolverLibro(String codlibro,LocalDate devolucion)throws PrestamoInvalidoException,UsuarioSancionadoException{
         boolean devuelto=false;
         for (int i=0;i<prestamos.length;i++){
-            if (prestamos[i]!=null && prestamos[i].getCodigoLibro().equalsIgnoreCase(codlibro) && devolucion.isBefore(prestamos[i].getFechaPrestamo())){
-                throw new PrestamoInvalidoException("Error. La fecha de devolucion no puede ser anterior a la fecha del prestamo.");
+            if (prestamos[i] != null && prestamos[i].getCodigoLibro().equalsIgnoreCase(codlibro)) {
+                if (devolucion.isBefore(prestamos[i].getFechaPrestamo())) {
+                    throw new PrestamoInvalidoException("Error. La fecha de devolucion no puede ser anterior a la fecha del prestamo.");
                 }
-            if (prestamos[i].getCodigoLibro().equalsIgnoreCase(codlibro)){
-                if (prestamos[i].estaRetrasado()){
-                    prestamos[i].registrarDevolucion(LocalDate.now());
-                    prestamos[i].getSocio().sancionar(prestamos[i].calcularDiasRetraso(),LocalDate.now());
-                    devuelto=true;
-                    break;
+                prestamos[i].registrarDevolucion(devolucion);
+                if (prestamos[i].estaRetrasado()) {
+                    prestamos[i].getSocio()
+                            .sancionar(prestamos[i].calcularDiasRetraso(), devolucion);
                 }
-            }
-            else {
-                prestamos[i].registrarDevolucion(LocalDate.now());
-                devuelto=true;
+                devuelto = true;
                 break;
             }
             }
