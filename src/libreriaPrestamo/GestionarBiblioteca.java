@@ -17,8 +17,9 @@ public class GestionarBiblioteca {
     }
 
     public void registrarUsuario(Usuario socio)throws UsuarioRepetidoException{
+        if (numeroUsuarios<MAX_USUARIOS){
         for (int i=0; i<=numeroUsuarios;i++){
-            if (socio.equals(this.usuarios)){
+            if (socio.equals(this.usuarios[i])){
                 throw new UsuarioRepetidoException("El usuario se encuentra repetido");
             }
         }
@@ -27,6 +28,10 @@ public class GestionarBiblioteca {
             if (this.usuarios[i]==null){
                 this.usuarios[i]=socio;
             }
+        }
+    }
+        else {
+            throw new UsuarioRepetidoException("Usuarios maximos alcanzados");
         }
     }
 
