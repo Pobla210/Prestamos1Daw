@@ -61,6 +61,8 @@ public class Usuario {
         return sancionado;
     }
 
+
+
     public String toString(){
         return "Nombre: "+nombre+"\nemail: "+email+"\nNumero Socio: "+numeroSocio+"\nFecha Registro: "+fechaRegistro+"\nFecha Fin Sancion: "+fechaFinSancion;
     }
