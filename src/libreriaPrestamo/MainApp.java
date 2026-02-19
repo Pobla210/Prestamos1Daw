@@ -25,11 +25,14 @@ public class MainApp {
                 case 1:
                     try {
                         registrarUsuario(in, gestor);
-                    } catch (UsuarioInvalidoExcepcion ue) {
+                    }
+                    catch (UsuarioInvalidoExcepcion ue) {
                         System.out.println(ue.getMessage());
-                    } catch (FormatoInvalidoException fe) {
+                    }
+                    catch (FormatoInvalidoException fe) {
                         System.out.println(fe.getMessage());
-                    } catch (UsuarioRepetidoException ure) {
+                    }
+                    catch (UsuarioRepetidoException ure) {
                         System.out.println(ure.getMessage());
                     }
                     break;
@@ -37,39 +40,68 @@ public class MainApp {
                 case 2:
                     try {
                         registrarPrestamo(in, gestor);
-                    } catch (UsuarioInvalidoExcepcion ue) {
+                    }
+                    catch (UsuarioInvalidoExcepcion ue) {
                         System.out.println(ue.getMessage());
-                    } catch (FormatoInvalidoException fe) {
+                    }
+                    catch (FormatoInvalidoException fe) {
                         System.out.println(fe.getMessage());
-                    } catch (PrestamoInvalidoException pie) {
+                    }
+                    catch (PrestamoInvalidoException pie) {
                         System.out.println(pie.getMessage());
-                    } catch (UsuarioSancionadoException use) {
+                    }
+                    catch (UsuarioSancionadoException use) {
                         System.out.println(use.getMessage());
-                    } catch (LibroNoDisponibleException lnde) {
+                    }
+                    catch (LibroNoDisponibleException lnde) {
                         System.out.println(lnde.getMessage());
                     }
                     break;
                 case 3:
                     try {
                         devolverLibro(in, gestor);
-                    } catch (FormatoInvalidoException fe) {
+                    }
+                    catch (FormatoInvalidoException fe) {
                         System.out.println(fe.getMessage());
-                    } catch (PrestamoInvalidoException pie) {
+                    }
+                    catch (PrestamoInvalidoException pie) {
                         System.out.println(pie.getMessage());
-                    } catch (UsuarioSancionadoException use) {
+                    }
+                    catch (UsuarioSancionadoException use) {
                         System.out.println(use.getMessage());
                     }
                     break;
                 case 4:
                     try {
                         consultarEstadoUsuario(in, gestor);
-                    } catch (UsuarioInvalidoExcepcion uie) {
+                    }
+                    catch (UsuarioInvalidoExcepcion uie) {
                         System.out.println(uie.getMessage());
                     }
                     break;
                 case 5:
+                    try {
+                        mostrarPrestamosActivos(gestor);
+                    }
+                    catch (PrestamoInvalidoException pie) {
+                        System.out.println(pie.getMessage());
+                    }
+                    break;
                 case 6:
+                    try {
+                        mostrarUsuariosSancionados(gestor);
+                    }
+                    catch (UsuarioSancionadoException use) {
+                        System.out.println(use.getMessage());
+                    }
+                    break;
                 case 7:
+                    try{
+                        actualizarSancion(gestor);
+                    }
+                    catch (UsuarioSancionadoException use){
+                        System.out.println(use.getMessage());
+                    }
                 case 8:
                     System.out.println("Saliendo...");
                     break;
@@ -177,13 +209,56 @@ public class MainApp {
         }
     }
 
+    public static String mostrarPrestamosActivos(GestionarBiblioteca gb) throws PrestamoInvalidoException {
+        Prestamo[] todos = gb.getPrestamos();
+        String todosPrestamos = "";
+        boolean prestamosvalidos = false;
+        for (int i = 0; i < gb.getPrestamos().length; i++) {
+            Prestamo p = todos[i];
+            if (p != null && p.getFechaDevolucionReal() == null) {
+                todosPrestamos += p.toString() + "\n";
+                prestamosvalidos = true;
+            }
+        }
+        if (!prestamosvalidos) {
+            throw new PrestamoInvalidoException("No hay prestamos realizados actualmente");
+        }
+        return todosPrestamos;
+    }
 
-    public static String mostrarPrestamosActivos(Scanner in, GestionarBiblioteca gb) throws PrestamoInvalidoException {
-        System.out.println("Dime el nombre del socio");
-        String socio=in.nextLine();
+    public static String mostrarUsuariosSancionados(GestionarBiblioteca gb) throws UsuarioSancionadoException {
+        Usuario[] todos = gb.getUsuarios();
+        String sancionados = "";
+        boolean usuariossancionados = false;
+        for (int i = 0; i < gb.getUsuarios().length; i++) {
+            Usuario u = todos[i];
+            if (u != null && u.estaSancionado()) {
+                sancionados += u.toString() + "\n";
+                usuariossancionados = true;
+            }
+        }
+        if (!usuariossancionados) {
+            throw new UsuarioSancionadoException("No hay usuarios sancionados actualmente");
+        }
+        return sancionados;
+    }
 
+    public static void actualizarSancion(GestionarBiblioteca gb) throws UsuarioSancionadoException {
+        Usuario[] todos = gb.getUsuarios();
+        int usuariossancionados=0;
+        for (int i = 0; i < gb.getUsuarios().length; i++) {
+            Usuario u = todos[i];
+            if (u != null && u.getFechaFinSancion()!=null && u.getFechaFinSancion().isBefore(LocalDate.now())) {
+                u.levantarSancion();
+                usuariossancionados++;
+            }
+        }
+        if (usuariossancionados==0){
+            throw new UsuarioSancionadoException("No hay usuarios sancionados");
+        }
     }
 }
+
 
 
 
