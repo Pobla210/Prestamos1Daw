@@ -8,7 +8,7 @@ public class Usuario {
     private String email;
     private static final String emailvalido="^[A-Za-z0-9]+@[A-Za-z0-9]+\\.(com|es)$";
     private String numeroSocio;
-    private static final String numeroSociovalido= "^SOC\\d{5}$";
+    private static final String numeroSociovalido= "^SOC[0-9]{5}$";
     private LocalDate fechaRegistro;
     private boolean sancionado;
     private LocalDate fechaFinSancion=null;
@@ -32,13 +32,13 @@ public class Usuario {
             this.email=email;
         }
         else {
-            throw new UsuarioInvalidoExcepcion("Usuario no valido. Prueba de nuevo");
+            throw new UsuarioInvalidoExcepcion("Usuario no valido. Email no valido");
         }
         if (numeroSocio.matches(numeroSociovalido)){
             this.numeroSocio=numeroSocio;
         }
         else {
-            throw new UsuarioInvalidoExcepcion("Usuario no valido. Prueba de nuevo");
+            throw new UsuarioInvalidoExcepcion("Usuario no valido. Numero de usuario no valido");
         }
         this.fechaRegistro=fechaRegistro;
     }
