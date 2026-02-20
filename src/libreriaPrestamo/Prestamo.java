@@ -54,8 +54,8 @@ public class Prestamo {
         if (fechaPrestamo==null) {
             throw new PrestamoInvalidoException("Error. La fecha introducida es nula.");
         }
-        else if (fechaPrestamo.isAfter(LocalDate.now())) {
-            throw new PrestamoInvalidoException("Error. La fecha introducida es posterior a la fecha actual.");
+        else if (fechaPrestamo.isBefore(LocalDate.now())) {
+            throw new PrestamoInvalidoException("Error. La fecha introducida es anterior a la fecha actual.");
         }
         else {
            this.fechaPrestamo=fechaPrestamo;
@@ -104,9 +104,9 @@ public class Prestamo {
 
     @Override
     public String toString() {
-        DateTimeFormatter patron = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        DateTimeFormatter patron = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         return "Codigo Libro: "+this.codigoLibro+"\nTitulo libro: "+this.tituloLibro+"\nNombre socio: "+this.socio.getNombre()+
                 "\nFecha del prestamo: "+fechaPrestamo.format(patron)+"\nFecha de devolucion prevista: "+fechaDevolucionPrevista.format(patron)+
-                "\nFecha de devolucion real: "+fechaDevolucionReal.format(patron);
+                "\nFecha de devolucion real: "+((fechaDevolucionReal!=null)?fechaDevolucionReal.format(patron):"No devuelto todavia");
     }
 }

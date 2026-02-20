@@ -6,7 +6,7 @@ public class Usuario {
 
     private String nombre;
     private String email;
-    private static final String emailvalido="^[A-Za-z0-9]+@[A-Za-z0-9]+\\.(com|es)$";
+    private static final String emailvalido="^[A-Za-z0-9]+@[A-Za-z0-9]+\\.(com|es|COM|ES)$";
     private String numeroSocio;
     private static final String numeroSociovalido= "^SOC[0-9]{5}$";
     private LocalDate fechaRegistro;

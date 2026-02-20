@@ -50,6 +50,7 @@ public class GestionarBiblioteca {
         for (int i=0;i<prestamos.length;i++){
             if (prestamos[i]==null){
                 prestamos[i]=new Prestamo(codlibro,socio,titulolibro,fechaprestamo);
+                return;
             }
         }
 

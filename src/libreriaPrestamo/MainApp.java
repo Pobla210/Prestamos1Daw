@@ -67,7 +67,7 @@ public class MainApp {
                     break;
                 case 3:
                     try {
-                        devolverLibro(in, gestor);
+                        System.out.println(devolverLibro(in, gestor));
                     }
                     catch (FormatoInvalidoException fe) {
                         System.out.println(fe.getMessage());
@@ -81,7 +81,7 @@ public class MainApp {
                     break;
                 case 4:
                     try {
-                        consultarEstadoUsuario(in, gestor);
+                        System.out.println(consultarEstadoUsuario(in, gestor));
                     }
                     catch (UsuarioInvalidoExcepcion uie) {
                         System.out.println(uie.getMessage());
@@ -89,7 +89,7 @@ public class MainApp {
                     break;
                 case 5:
                     try {
-                        mostrarPrestamosActivos(gestor);
+                        System.out.println(mostrarPrestamosActivos(gestor));
                     }
                     catch (PrestamoInvalidoException pie) {
                         System.out.println(pie.getMessage());
@@ -97,7 +97,7 @@ public class MainApp {
                     break;
                 case 6:
                     try {
-                        mostrarUsuariosSancionados(gestor);
+                        System.out.println(mostrarUsuariosSancionados(gestor));
                     }
                     catch (UsuarioSancionadoException use) {
                         System.out.println(use.getMessage());
@@ -153,7 +153,7 @@ public class MainApp {
     public static void registrarPrestamo(Scanner in, GestionarBiblioteca gb) throws PrestamoInvalidoException, UsuarioSancionadoException, LibroNoDisponibleException, FormatoInvalidoException, UsuarioInvalidoExcepcion,DateTimeException {
         String[] fechas;
         Usuario socio;
-        System.out.println("Introduce el codigo del libro: ");
+        System.out.println("Introduce el codigo del libro (Ejemplo:ABC1234): ");
         String codigoLibro = in.nextLine();
 
         System.out.println("Introduce el titulo del libro: ");
@@ -205,13 +205,13 @@ public class MainApp {
     }
 
     public static String consultarEstadoUsuario(Scanner in, GestionarBiblioteca gb) throws UsuarioInvalidoExcepcion {
-        System.out.println("Introduce el nombre del socio: ");
-        String socio = in.nextLine();
+        System.out.println("Introduce el numero del socio: ");
+        String socio = in.nextLine().trim();
 
         Usuario sociocomprobar = gb.buscarUsuario(socio);
 
         if (gb.buscarUsuario(socio) == null) {
-            throw new UsuarioInvalidoExcepcion("El usuario buscado no existe.");
+            throw new UsuarioInvalidoExcepcion("El usuario buscado no existe. Introduce su codigo.");
         }
         if (sociocomprobar.estaSancionado() == true) {
             return sociocomprobar.toString() + "\nEl socio se encuntra sancionado actualmente";
